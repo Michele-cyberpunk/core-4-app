@@ -1,0 +1,12 @@
+
+> persona_v3.0:-dual-agent-interface@0.0.0 lint
+> eslint . --ext .ts,.tsx json
+
+
+Oops! Something went wrong! :(
+
+ESLint: 9.39.1
+
+No files matching the pattern "json" were found.
+Please check for typing mistakes in the pattern.
+

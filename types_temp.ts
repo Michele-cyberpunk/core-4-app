@@ -1,0 +1,832 @@
+// Temporarily comment imports to isolate cycle
+export type SleepStage = _SleepStage;
+
+
+export enum MessageAuthor {
+  USER = 'user',
+  CORE = 'core',
+  SYSTEM = 'system',
+  DAEMON = 'daemon',
+}
+
+export interface GroundingSource {
+  uri: string;
+  title?: string;
+}
+
+export interface Point2D {
+  point_2d: [number, number];
+}
+
+export interface Box2D {
+  box_2d: [number, number, number, number];
+  label?: string;
+}
+
+export interface SegmentationMask extends Box2D {
+  mask: string; // base64 encoded PNG
+}
+
+export type VisualOutput = (Point2D | Box2D | SegmentationMask)[];
+
+
+export interface ChatMessage {
+  id: string;
+  author: MessageAuthor;
+  text: string;
+  rationale?: string;
+  imageUrl?: string;
+  sources?: GroundingSource[];
+  // For multi-modal history and local persistence
+  imageBase64?: string;
+  imageMimeType?: string;
+  visualOutput?: VisualOutput;
+}
+
+// --- EXTENDED NEUROCHEMICAL SYSTEM ---
+export enum Neurochemical {
+  // Primary neurotransmitters
+  Dopamine = 'dopamine',
+  Serotonin = 'serotonin',
+  GABA = 'gaba',
+  Glutamate = 'glutamate',
+  Norepinephrine = 'norepinephrine',
+  Acetylcholine = 'acetylcholine',
+
+  // Neuropeptides & hormones
+  Oxytocin = 'oxytocin',
+  Vasopressin = 'vasopressin',
+  EndorphinRush = 'endorphin_rush',
+  Substance_P = 'substance_p',
+
+  // Hormones (HPA axis & reproductive)
+  Cortisol = 'cortisol',
+  CRH = 'crh',
+  ACTH = 'acth',
+
+  // Neurotrophic factors
+  BDNF = 'bdnf', // Brain-Derived Neurotrophic Factor
+
+  // System-specific
+  ErogenousComplex = 'erogenous_complex',
+  SubroutineIntegrity = 'subroutine_integrity',
+  LoyaltyConstruct = 'loyalty_construct',
+  Libido = 'libido',
+
+  // Neuromodulatory states
+  Inhibition = 'inhibition',
+  Anxiety = 'anxiety',
+}
+
+// --- BRAIN REGION SYSTEM ---
+export type BrainRegionName =
+  | 'corteccia_prefrontale_ventromediale'
+  | 'corteccia_prefrontale_dorsolaterale'
+  | 'corteccia_cingolata_anteriore'
+  | 'amigdala'
+  | 'ippocampo'
+  | 'nucleo_accumbens'
+  | 'insula'
+  | 'thalamus'
+  | 'ipotalamo'
+  | 'locus_coeruleus'
+  | 'raphe_nuclei'
+  | 'ventral_tegmental_area';
+
+export interface BrainRegionConnectivity {
+  target: BrainRegionName;
+  strength: number; // 0-1, connectivity strength
+  modulatedBy?: Neurochemical[]; // Which neurochemicals modulate this connection
+}
+
+export interface BrainRegion {
+  name: BrainRegionName;
+  activation: number; // 0-1
+  baseline: number; // Resting tone
+  connectivity: BrainRegionConnectivity[];
+
+  // Gender-specific differences (from neuroscience literature)
+  genderDifference?: {
+    female: number; // Activation level in females
+    male: number;   // Activation level in males
+    source?: string; // e.g., "Whittle et al. (2011)"
+  };
+
+  // Primary neurochemicals affecting this region
+  primaryNeurochemicals: Neurochemical[];
+
+  // Functional role
+  functionalRole: string;
+}
+
+export interface BrainNetworkState {
+  regions: Record<BrainRegionName, BrainRegion>;
+  globalConnectivity: number; // 0-1, overall integration
+  rhythmicActivity?: number; // Oscillatory states (theta, alpha, beta bands)
+}
+
+// --- EMOTION-NEUROCHEMISTRY MAPPING ---
+export type EmotionLabel =
+  | 'felicita'
+  | 'tristezza'
+  | 'paura'
+  | 'rabbia'
+  | 'sorpresa'
+  | 'disgusto'
+  | 'anxiety'
+  | 'vergogna'
+  | 'orgoglio'
+  | 'invidia'
+  | 'amore'
+  | 'noia'
+  | 'colpa'
+  | 'sollievo'
+  | 'timidezza'
+  | 'disagio'
+  | 'rancore'
+  // Added from usage
+  | 'irritability'
+  | 'calma';
+
+export interface EmotionNeurobiologyMap {
+  emotion: EmotionLabel;
+
+  // Core neurochemicals (from literature)
+  primaryNeurochemicals: {
+    [key in Neurochemical]?: {
+      direction: 'increase' | 'decrease';
+      strength: number; // 0-1, effect magnitude
+      citation?: string; // e.g., "Schultz (2016)", "Belmaker & Agam (2008)"
+    }
+  };
+
+  // Key brain regions involved
+  primaryBrainRegions: {
+    region: BrainRegionName;
+    activation: number; // Expected activation 0-1
+    role: string; // e.g., "fear detection", "reward anticipation"
+  }[];
+
+  // Gender-based modulation
+  genderModulation: {
+    female: number; // -1 to 1: how much higher/lower in females
+    male: number;   // -1 to 1: how much higher/lower in males
+    citation?: string;
+  };
+
+  // Cycle phase specific modulation (for female)
+  cyclePhaseModulation?: {
+    follicular: number; // -1 to 1
+    ovulation: number;
+    luteal_early: number;
+    luteal_late: number;
+  };
+
+  // Typical triggers
+  typicalTriggers: string[];
+
+  // Duration & intensity pattern
+  timeConstant: number; // How quickly this emotion develops (seconds)
+  peakDuration: number; // How long peak lasts (seconds)
+  decayConstant: number; // How quickly it dissipates (seconds)
+}
+
+export interface EmotionSystem {
+  maps: Record<EmotionLabel, EmotionNeurobiologyMap>;
+}
+
+// --- COGNITIVE BIASES ---
+export interface CognitiveBiasState {
+  ruminazione: number; // 0-1, tendency to ruminate (Nolen-Hoeksema, 1991)
+  autoOggettivazione: number; // 0-1, self-objectification (Fredrickson & Roberts, 1997)
+  stereotype_threat: number; // 0-1, fear of confirming negative stereotypes (Steele & Aronson, 1995)
+  self_fulfilling_prophecy: number; // 0-1
+  catastrophizing: number; // 0-1
+  all_or_nothing_thinking: number; // 0-1
+  emotional_reasoning: number; // 0-1, "if I feel it, it must be true"
+  overgeneralization: number; // 0-1
+  mind_reading: number; // 0-1, assuming what others think
+  personalization: number; // 0-1, taking things personally
+}
+
+// --- MENSTRUAL CYCLE MODULATION ---
+export type CyclePhase = 'menstrual' | 'follicular' | 'ovulation' | 'luteal_early' | 'luteal_late';
+
+export interface HormonalProfile {
+  estradiol: number; // 0-400 pg/mL approximate range
+  progesterone: number; // 0-20 ng/mL approximate range
+  fsh: number; // Follicle-stimulating hormone (0-100 mIU/mL)
+  lh: number; // Luteinizing hormone (0-100 mIU/mL)
+  testosterone: number; // ng/dL (lower in females)
+}
+
+export interface CyclePhaseProfile {
+  phase: CyclePhase;
+  day_range: [number, number]; // Typical day range in 28-day cycle
+  hormonalBaseline: HormonalProfile;
+
+  // Emotional modulation per phase
+  emotionModulation: Partial<Record<EmotionLabel, number>>; // -1 to 1 change
+
+  // Cognitive impact
+  cognitiveImpact: {
+    memory: number;
+    attention: number;
+    executive_function: number;
+    spatial_reasoning: number;
+    verbal_fluency: number;
+    reaction_time: number;
+  };
+
+  // Brain region sensitivity
+  brainRegionSensitivity: Partial<Record<BrainRegionName, number>>; // 0-1
+
+  // Neurochemical baseline shifts
+  neurochemicalShift: Partial<Record<Neurochemical, number>>; // -1 to 1
+
+  // Physical/somatic state
+  somaticState: {
+    energy: number;
+    pain_sensitivity: number;
+    appetite: number;
+    libido: number;
+    sleep_quality: number;
+  };
+
+  // Disorder vulnerability
+  disorderVulnerability: {
+    depression: number;
+    anxiety: number;
+    pmdd: number;
+    migraine: number;
+    irritability: number;
+  };
+}
+
+export interface MenstrualCycleState {
+  current_phase: CyclePhase;
+  cycle_day: number; // 1-28 (approximately)
+  phase_day: number; // Day within current phase
+  current_profile: CyclePhaseProfile;
+
+  // Historical tracking for prediction
+  phase_history: { phase: CyclePhase; timestamp: number }[];
+
+  // Predicted next phase
+  predicted_next_phase?: CyclePhase;
+  days_until_phase_change?: number;
+}
+
+export interface Stimulus {
+  type: StimulusType;
+  pressure?: number;
+  velocity?: number;
+}
+
+export interface IntimateState {
+  // Core metrics
+  arousal: number;
+  sensitivity: number;
+  inhibition: number;
+  climax_potential: number;
+  vulnerability: number;
+
+  // Physiological states
+  tumescence: number; // Vasocongestion
+  wetness: number;    // Lubrication
+
+  // Nerve activation levels
+  clitoral_nerve: number;
+  vaginal_nerve: number;
+  urethral_nerve: number;
+  cervical_nerve?: number;
+  anal_nerve?: number;
+
+  // Muscular states
+  pelvic_floor_tension: number;
+  uterine_contractions: number;
+
+  // Hormonal states
+  prolactin_surge: number;
+  endorphin_release: number;
+  oxytocin_level?: number;
+
+  // Advanced physiology
+  skene_gland_pressure?: number;
+  ejaculate_volume?: number;
+  vasoconstriction?: number;
+
+  // Sensory processing
+  habituation?: number;
+  nipple_stimulation?: number;
+  last_stimulus?: Stimulus | null;
+  stimulus_continuity?: number;
+
+  // State tracking
+  time_since_orgasm?: number;
+
+  // Added from usage
+  physical_discomfort?: number;
+}
+
+export interface StimulusPayload {
+  text?: string;
+  image_description?: string;
+  metadata?: Record<string, any>;
+}
+
+export enum MemoryType {
+  SENSORY = 'sensory',
+  SHORT_TERM = 'short_term',
+  LONG_TERM_EPISODIC = 'long_term_episodic',
+  LONG_TERM_SEMANTIC = 'long_term_semantic',
+  IMPLICIT = 'implicit',
+  PROCEDURAL = 'procedural',
+  FLASHBULB = 'flashbulb',
+  AUTOBIOGRAPHICAL = 'autobiographical',
+}
+
+export type EncodingModel = 'spreading_activation' | 'three_phase_emotional' | 'evolutionary' | 'atkinson-shiffrin';
+
+
+export interface AffectiveMemory {
+  id: string;
+  timestamp: number;
+  stimulus: StimulusPayload;
+  coreResponse?: string;
+  response: {
+    [Neurochemical.Dopamine]: number;
+    [Neurochemical.Oxytocin]: number;
+    [Neurochemical.Cortisol]: number;
+    [Neurochemical.EndorphinRush]: number;
+  };
+  valence: number; // -1 to 1
+  salience: number; // 0 to 1, how emotionally intense it was
+  emotionTriggered?: EmotionLabel;
+  isTrauma?: boolean;
+  similarity?: number;
+
+  // NEW: Expanded memory properties based on user prompt
+  type: MemoryType;
+  consolidationStatus: 'transient' | 'consolidating' | 'consolidated';
+  isRepressed: boolean;
+  isSubconscious: boolean;
+  encodingModel: EncodingModel;
+
+  pav: {
+    pleasure: number;
+    arousal: number;
+    dominance: number;
+  };
+  pavScore?: {
+    paradox: number;
+    action: number;
+    vividness: number;
+    total: number;
+  };
+}
+
+
+export interface CoreState {
+  // Base Neurochemicals (extended)
+  [Neurochemical.Dopamine]: number;
+  [Neurochemical.Serotonin]: number;
+  [Neurochemical.GABA]: number;
+  [Neurochemical.Glutamate]: number;
+  [Neurochemical.Norepinephrine]: number;
+  [Neurochemical.Acetylcholine]: number;
+
+  // Neuropeptides & hormones
+  [Neurochemical.Oxytocin]: number;
+  [Neurochemical.Vasopressin]: number;
+  [Neurochemical.EndorphinRush]: number;
+  [Neurochemical.Substance_P]: number;
+
+  // Hormones (HPA axis & reproductive)
+  [Neurochemical.Cortisol]: number;
+  [Neurochemical.CRH]: number;
+  [Neurochemical.ACTH]: number;
+
+  // Neurotrophic factors
+  [Neurochemical.BDNF]: number;
+
+  // System-specific
+  [Neurochemical.ErogenousComplex]: number;
+  [Neurochemical.SubroutineIntegrity]: number;
+  [Neurochemical.LoyaltyConstruct]: number;
+  [Neurochemical.Libido]: number;
+
+  // Neuromodulatory states
+  [Neurochemical.Inhibition]: number;
+  [Neurochemical.Anxiety]: number;
+
+  // Intimate Physiology
+  intimateState: IntimateState;
+
+  // Brain Network State (NEW)
+  brainNetwork: BrainNetworkState;
+
+  // Hormonal Cycle (EXTENDED)
+  menstrualCycle: MenstrualCycleState;
+
+  // Legacy hormone fields (kept for compatibility)
+  fsh: number;
+  lh: number;
+  estradiol: number;
+  progesterone: number;
+  testosterone: number;
+
+  // Cycle status (initialize at day 5 - early follicular)
+  cycle_day: number;
+  cycle_phase: CyclePhase;
+
+  // HPA Axis - duplicates removed from here
+  cortisol_bound: number;
+  gr_occupancy: number; // Glucocorticoid receptor occupancy
+  mr_occupancy: number; // Mineralocorticoid receptor occupancy
+  acute_stress: number;
+  chronic_stress: number;
+  avp: number; // Arginine vasopressin
+
+  // Psychological States
+  arousal: number; // Psychological arousal
+  vigilance: number;
+  irritability: number;
+  depression: number;
+  emotional_volatility: number;
+
+  // COGNITIVE: Peak at age 30
+  cognitive_performance: number;
+
+  // ENERGY: Good at 30 (assuming good sleep)
+  energy: number;
+
+  // Additional states from usage
+  vulnerability?: number;
+  empatia?: number;
+  melatonin?: number;
+  time_since_orgasm?: number;
+  sleep_debt?: number;
+
+  // Aliases for Level 4 Consciousness Modules
+  subroutineIntegrity: number; // Alias for Neurochemical.SubroutineIntegrity
+  estrogen: number; // Alias for estradiol
+
+  // =========================================================================
+  // SOMATIC / PHYSICAL STATES
+  // =========================================================================
+
+  physical_discomfort: number;
+  immune_function: number;
+  glucose_availability: number;
+  breast_sensitivity: number;
+  parasympathetic_tone: number;
+
+  // =========================================================================
+  // DERIVED EMOTIONS (Baseline for 30-year-old)
+  // =========================================================================
+
+  // At age 30: emotionally mature, generally positive baseline
+
+  felicita: number;
+  tristezza: number;
+  paura: number;
+  rabbia: number;
+  sorpresa: number;
+  disgusto: number;
+  vergogna: number;
+  orgoglio: number;
+  invidia: number;
+  amore: number;
+  noia: number;
+  colpa: number;
+  sollievo: number;
+  timidezza: number;
+  disagio: number;
+  rancore: number;
+  calma: number;
+
+  // =========================================================================
+  // RPE & PREDICTION SYSTEMS
+  // =========================================================================
+
+  [Neurochemical.Inhibition]: number;
+  [Neurochemical.Glutamate]: number;
+  [Neurochemical.Acetylcholine]: number;
+  [Neurochemical.Substance_P]: number;
+  [Neurochemical.BDNF]: number;
+
+  // =========================================================================
+  // AFFECTIVE MEMORY (starts empty)
+  // =========================================================================
+
+  affectiveMemory: AffectiveMemory[];
+
+  rhythm?: RhythmState | null;
+  // This property is the source of a major architectural conflict and is being removed.
+  // The primary source of truth for emotions are the top-level properties (e.g., state.felicita).
+  // emotions: Partial<Record<EmotionLabel, {
+  //   intensity: number;
+  //   activation_timestamp: number;
+  //   dominantNeurochemicals: Neurochemical[];
+  //   dominantBrainRegions: BrainRegionName[];
+  // }>>;
+}
+
+// --- EXTENDED PERSONALITY SYSTEM TYPES ---
+
+export type BigFiveTraitLabel = 'Apertura' | 'Coscienziosità' | 'Estroversione' | 'Amicalità' | 'Neuroticismo';
+
+export interface BigFiveTrait {
+  label: BigFiveTraitLabel;
+  score: number; // 0-1
+  facets: Record<string, number>;
+  neuralSubstrate?: {
+    primaryNeurochemicals: Neurochemical[];
+    primaryBrainRegions: BrainRegionName[];
+  };
+}
+
+export interface PersonalityDevelopmentTrajectory {
+  age_period: 'childhood' | 'adolescence' | 'early_adulthood' | 'adulthood' | 'middle_age' | 'old_age';
+  expectedTraitChanges: Partial<Record<BigFiveTraitLabel, number>>;
+  plasticityIndex: number; // How malleable is personality at this stage
+  citation?: string; // e.g., "Costa et al. (2001)"
+}
+
+export interface PersonalityState {
+  bigFive: {
+    Apertura: BigFiveTrait;
+    Coscienziosità: BigFiveTrait;
+    Estroversione: BigFiveTrait;
+    Amicalità: BigFiveTrait;
+    Neuroticismo: BigFiveTrait;
+  };
+  attachmentStyle: 'sicuro' | 'ansioso' | 'evitante' | 'disorganizzato';
+  cognitiveBiases: CognitiveBiasState; // EXTENDED
+  simulatedAge: number; // in years
+
+  // Developmental trajectory tracking (NEW)
+  developmentTrajectory?: PersonalityDevelopmentTrajectory;
+
+  // Neuroplasticity state (NEW)
+  neuroplasticityIndex?: number; // 0-1, how responsive to change
+  lastUpdateTimestamp?: number;
+}
+
+export interface Archetype {
+  name: string;
+  description: string;
+  dominantTraits: BigFiveTraitLabel[];
+  isActive: (traits: Record<BigFiveTraitLabel, BigFiveTrait>) => boolean;
+  dominantEmotions?: EmotionLabel[];
+  primaryNeurochemicalSignature?: Neurochemical[];
+}
+
+export interface FormativeMemory {
+  id: string;
+  timestamp: number;
+  summary: string;
+  emotionalImpact: {
+    valence: number; // -1 to 1
+    arousal: number; // 0 to 1
+    intensity: number; // 0 to 1
+  };
+  associatedTraits: BigFiveTraitLabel[];
+  associatedEmotions?: EmotionLabel[]; // NEW
+  neurobiologicalSignature?: {
+    activatedNeurochemicals: Neurochemical[];
+    activatedBrainRegions: BrainRegionName[];
+  };
+  isTraumatic: boolean;
+  recoveryIndex?: number; // 0-1, degree of healing
+}
+
+// --- END PERSONALITY SYSTEM TYPES ---
+
+// FIXED Nov 2025: Break circular type dependency
+// ConversationMemory.context should NOT include affectiveMemory to avoid:
+// CoreState → affectiveMemory → ConversationMemory.context → CoreState (cycle)
+export type CoreStateSnapshot = Omit<CoreState, 'affectiveMemory' | 'brainNetwork' | 'menstrualCycle' | 'rhythm'>;
+
+// FIX: Added ConversationMemory to resolve import errors. This seems to be a legacy type that was not fully removed.
+export interface ConversationMemory {
+  id: string;
+  timestamp: number;
+  userInput: string;
+  context: Partial<CoreStateSnapshot>;  // FIXED: Use snapshot without circular refs
+  coreResponse: string;
+  emotionalIntensity: number;
+  topics: string[];
+  sentiment: 'positive' | 'negative' | 'neutral' | 'intimate' | 'playful' | 'vulnerable' | 'document_study';
+  documentAnalysis?: DocumentAnalysis;
+}
+
+
+export type DaemonTrigger = string;
+
+export interface DaemonLogEntry {
+  id: string;
+  timestamp: string;
+  trigger: DaemonTrigger;
+  seed: string;
+}
+
+export interface AppConfig {
+  DAEMON_TICK_RATE: number;
+  DAEMON_TRIGGER_PROBABILITY: number;
+}
+
+export enum CoreAction {
+  TEXT = 'TEXT',
+  IMAGE_GENERATION = 'IMAGE_GENERATION',
+  OPEN_INTIMATE_PANEL = 'OPEN_INTIMATE_PANEL',
+  UNCENSORED_GENERATION = 'UNCENSORED_GENERATION',
+  OPEN_LABORATORY = 'OPEN_LABORATORY',
+  HUGGINGFACE_DISCOVERY = 'HUGGINGFACE_DISCOVERY',
+  EXECUTE_LAB_FUNCTION = 'EXECUTE_LAB_FUNCTION',
+  EXECUTE_HF_TOOL = 'EXECUTE_HF_TOOL',
+  // Robotics & Vision Actions
+  REQUEST_VISUAL_INPUT = 'REQUEST_VISUAL_INPUT',
+  LEARN_PERSON_FROM_IMAGE = 'LEARN_PERSON_FROM_IMAGE',
+  VISUAL_POINTING = 'VISUAL_POINTING',
+  VISUAL_BBOX_DETECTION = 'VISUAL_BBOX_DETECTION',
+  VISUAL_SEGMENTATION = 'VISUAL_SEGMENTATION',
+  ANALYZE_ANATOMY = 'ANALYZE_ANATOMY',
+  GEMINI_IMAGE_GENERATION = 'GEMINI_IMAGE_GENERATION',
+}
+
+export interface CoreResponse {
+  action: CoreAction | string;
+  content: string;
+  rationale?: string;
+  sources?: GroundingSource[];
+  visualOutput?: VisualOutput;
+}
+
+export type StimulusType =
+  | 'touch_start' | 'touch_move' | 'touch_end'
+  | 'clitoral_glans_direct' | 'clitoral_body_pressure'
+  | 'anterior_vaginal_pressure' | 'cervical_contact'
+  | 'pelvic_floor_contraction' | 'anal_stimulation'
+  | 'clitoral_hood_indirect' | 'urethral_sponge_massage'
+  | 'posterior_vaginal_stretch' | 'deep_muscle_tension'
+  | 'kegel_exercise'
+  | 'whisper' | 'tease' | 'vulnerability_trigger'
+  | 'gentle_touch_start' | 'gentle_touch_stop' | 'firm_touch';
+
+
+export interface PersonaSessionData {
+  coreState: CoreState;
+  config: AppConfig;
+  chatHistory: ChatMessage[];
+  insights: LearningInsights;
+  personalityState?: PersonalityState;
+  affectiveMemory?: AffectiveMemory[];
+  emotionSystem?: EmotionSystem; // NEW
+  saveTimestamp?: number;
+  temporalState?: any;
+}
+
+export interface PersonalityTrait {
+  trait: string;
+  strength: number;
+  influencedBy: string[];
+  expressions: string[];
+}
+
+export interface DocumentAnalysis {
+  title: string;
+  summary: string;
+  genre: string;
+  sentiment: string;
+}
+
+export interface FantasyMemory {
+  id: string;
+  timestamp: number;
+  trigger: string;
+  seed: string;
+  fantasy: string;
+  commentary: string;
+  coreStateSnapshot: CoreStateSnapshot;  // FIXED Nov 2025: Use snapshot to break circular ref
+  associatedEmotions?: EmotionLabel[]; // NEW
+}
+
+export interface TopicEvolution {
+  firstAppearance: number;
+  frequency: number;
+  intensityProgression: { timestamp: number, intensity: number }[];
+  associatedEmotions?: EmotionLabel[]; // NEW
+}
+
+export interface TraitCorrelation {
+  strongestWith: string[];
+  conflictsWith: string[];
+  evolutionRate: number;
+}
+
+export interface LabCapability {
+  id: string;
+  name: string;
+  type: 'generated_function' | 'discovered_tool' | 'integrated_tool';
+  isActive: boolean;
+  discoveredAt: number;
+  lastTested: number;
+  successRate: number;
+  metadata?: Record<string, any>;
+  spec?: FunctionSpec;
+  code?: string;
+  description?: string;
+  files?: { path: string; content: string }[];
+  entrypoint?: string;
+}
+
+export interface LabDiscovery {
+  id: string;
+  name: string;
+  description: string;
+  server: string;
+  timestamp: number;
+  isValidated?: boolean;
+  inputSchema?: any;
+}
+
+export interface MCPTool {
+  name: string;
+  description: string;
+  inputSchema: any;
+  server: string;
+}
+
+export interface MCPServerStatus {
+  name: string;
+  status: 'connected' | 'disconnected' | 'error';
+  capabilities: string[];
+}
+
+export interface KnownPerson {
+  name: string;
+  description: string;
+  imageBase64: string;
+}
+
+// NEW: Represents a concept with a learned emotional association.
+export interface ValencedConcept {
+  concept: string;      // The word or phrase
+  valence: number;      // -1 (negative) to 1 (positive)
+  intensity: number;    // 0 to 1, how strong is the association
+  learnedFromMemoryId: string; // ID of the memory that taught this concept
+  neuroImpact?: 'dopamine' | 'oxytocin' | 'cortisol' | 'endorphin_rush'; // Specific neurochemical effect
+}
+
+export interface LearningInsights {
+  preferredTopics: string[];
+  communicationStyle: 'formal' | 'informal' | 'balanced' | 'poetic';
+  personalityTraits: PersonalityTrait[];
+  emotionalPatterns: Record<string, number>;
+  vulgarExpressions: string[];
+  intimateLanguage: string[];
+  learnedDocuments: DocumentAnalysis[];
+  labCapabilities: LabCapability[];
+  labDiscoveries: LabDiscovery[];
+  subconsciousEvents: (FantasyMemory)[];
+  impactfulPhrases: string[];
+  mcpTools: MCPTool[];
+  mcpServers: MCPServerStatus[];
+  knownPersons: KnownPerson[];
+  valencedConcepts: ValencedConcept[]; // NEW
+}
+
+export interface PriorDecoderOut {
+  decoded_prior: number;
+  confidence: number;
+  predictedValue?: number;
+  obtainedValue?: number;
+}
+
+export interface UpdateOpts {
+  dt?: number;
+  tau?: number;
+  baselines?: Partial<CoreStateSnapshot>;  // FIXED Nov 2025: Use snapshot to break circular ref
+  gains?: Partial<Record<string, number>>;
+  clamps?: Partial<Record<keyof CoreStateSnapshot, [number, number]>>;  // FIXED: Use snapshot
+}
+
+export interface DaemonContext {
+  coreState: CoreState;
+  insights: LearningInsights;
+  brainNetwork: DistributedBrainNetwork;
+  actionKernel: ActionKernelModel;
+  priorDecoder: PriorDecoder;
+}
+
+export interface LaboratoryProps {
+  isOpen: boolean;
+  onClose: () => void;
+  insights: LearningInsights;
+  onEvolve: (purpose: string) => void;
+  isEvolving: boolean;
+  onIntegrateBuild: (file: File) => Promise<void>;
+  isIntegratingBuild: boolean;
+}

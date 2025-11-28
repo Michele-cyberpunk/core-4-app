@@ -1,0 +1,69 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+
+# Environment files (NEVER commit API keys!)
+.env.local
+.env.*.local
+.env.production.local
+.env.development.local
+*.env
+*.key
+
+# Secrets and credentials
+secrets/
+credentials.json
+service-account.json
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Build artifacts
+*.tsbuildinfo
+.rollup.cache/
+.parcel-cache/
+
+# Coverage reports
+coverage/
+*.lcov
+
+# Test results
+test-results/
+*.test-results.xml
+
+# Session exports (user data, keep private)
+*.session.json
+persona_*.json
+*-export.json

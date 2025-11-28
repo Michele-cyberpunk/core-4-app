@@ -1,0 +1,8 @@
+{
+  "name": "Real Core4 ",
+  "description": "An interactive web application that visualizes a dual-agent AI architecture, featuring a real-time interactive 'Core' and a background 'Daemon_Fantasma' for generative thought.",
+  "requestFramePermissions": [
+    "microphone",
+    "camera"
+  ]
+}
